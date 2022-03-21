@@ -1,6 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:veterinariamanto/assets/Colors/color.dart';
+import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:veterinariamanto/assets/Colors/color.dart';
+import 'package:http/http.dart' as http;
+import 'package:veterinariamanto/providers/sesion_info.dart';
 import '../painter/login_painter.dart';
 
 class Login extends StatefulWidget {
@@ -14,6 +18,7 @@ class _LoginState extends State<Login> {
   String user = '';
   String password = '';
   bool _isObscure = false;
+
   get _textFieldUser => Container(
       margin: const EdgeInsets.only(top: 20, bottom: 10),
       // color: Colors.black,
@@ -70,8 +75,11 @@ class _LoginState extends State<Login> {
               ),
             ],
           ),
-          //TEXT FIELD CORREO
+          //TEXT FIELD PASSWORD
           TextField(
+            onChanged: (value) {
+              password = value;
+            },
             obscureText: !_isObscure,
             decoration: InputDecoration(
               suffixIcon: IconButton(
@@ -97,22 +105,6 @@ class _LoginState extends State<Login> {
         ],
       ));
 
-  get _button => Container(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size(140, 40),
-                elevation: 5,
-                primary: ColorSelect.loginBackGround),
-            onPressed: () {
-              //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
-            },
-            child: const Text(
-              'Iniciar sesión',
-              style: TextStyle(fontSize: 16),
-            )),
-      );
-
   get _registerButton => Padding(
         padding: const EdgeInsets.only(bottom: 5),
         child: Row(
@@ -134,8 +126,11 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final loginInfo = Provider.of<SesionInfo>(context);
     var size = MediaQuery.of(context).size;
-
+    // print('Guardado en sesion info');
+    // print(loginInfo.id);
+    // print(loginInfo.token);
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -158,6 +153,7 @@ class _LoginState extends State<Login> {
               //LO DEMAS
               SingleChildScrollView(
                 child: Container(
+                  //MOSTRAR A TUS COMPAS PA VER COMO LES GUSTA
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(30)),
                     // color: Colors.black.withOpacity(0.4)
@@ -208,7 +204,7 @@ class _LoginState extends State<Login> {
                             _registerButton,
 
                             //BOTON
-                            _button,
+                            _button(loginInfo),
                           ],
                         ),
                       )
@@ -224,5 +220,64 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  dynamic _button(SesionInfo loginInfo) {
+    return (Container(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              minimumSize: const Size(140, 40),
+              elevation: 5,
+              primary: ColorSelect.loginBackGround),
+          onPressed: () async {
+            //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
+            // print(user);
+            // print(password);
+
+            if (user == "" || password == "") {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text(("Llenar todos los campos"))),
+              );
+            } else {
+              final respuesta = await _callBackend(user, password);
+
+              // print(respuesta);
+
+              if (respuesta == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text(("Usuario invalido"))),
+                );
+              } else {
+                // print('Usuario valido se guarda');
+                loginInfo.saveData(datos: respuesta);
+              }
+            }
+          },
+          child: const Text(
+            'Iniciar sesión',
+            style: TextStyle(fontSize: 16),
+          )),
+    ));
+  }
+
+  Future? _callBackend(nombre, password) async {
+    Uri url = Uri.http('192.168.100.8:18080', 'user/login');
+
+    final response = await http.post(url,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        // FORMA FACIL DE REALIZAR UN JSON DE UN MAPA
+        body: json.encode({'nombre': nombre, 'password': password}));
+
+    if (response.body == '') {
+      // SI EL BODY VIENE VACIO ES PORQUE EL USUARIO NO EXISTE
+      return null;
+    } else {
+      // SI NO ES PORQUE ENCONTRO EL USUARIO
+      final respuesta = json.decode(response.body);
+      return respuesta;
+    }
   }
 }
