@@ -13,6 +13,7 @@ class SesionInfo with ChangeNotifier {
     Future.delayed(const Duration(milliseconds: 6000000), () {
       id = 0;
       token = '';
+      notifyListeners();
     });
   }
 }
