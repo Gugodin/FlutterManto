@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinariamanto/pages/login.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
+import 'package:veterinariamanto/pages/medicamentos.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         initialRoute: '/',
         routes: {
           '/': (context) => Login(),
+          'Medicamentos': (context) => Medicamentos(),
         },
       ),
     );
