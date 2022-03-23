@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:veterinariamanto/pages/login.dart';
+import 'package:veterinariamanto/pages/medicamentos.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,9 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/',
+      initialRoute: 'Medicamentos',
       routes: {
         '/': (context) => Login(),
+        'Medicamentos': (context) => Medicamentos(),
       },
       
     );
