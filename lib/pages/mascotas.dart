@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:veterinariamanto/assets/Colors/color.dart';
+import 'package:http/http.dart' as http;
+
+import 'dart:convert';
+
+// import 'package:flutter/material.dart';
+
+// import 'package:provider/provider.dart';
+
+// import 'package:veterinariamanto/assets/Colors/color.dart';
+// import 'package:http/http.dart' as http;
+
+// import 'package:veterinariamanto/providers/sesion_info.dart';
+// import '../painter/login_painter.dart';
+
 
 class Mascotas extends StatefulWidget {
   Mascotas({Key? key}) : super(key: key);
@@ -33,12 +47,34 @@ class _MascotasState extends State<Mascotas> {
               height: height * 0.05,
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: Row(
-                children: const [
-                  Text('Id'),
-                  Text('Name'),
-                  Text('Raza'),
-                  Text('Fecha ingreso'),
-                  Text('Razon')
+                children: [
+                  // const Text('Id'),
+                  // const Text('Name'),
+                  // const Text('Raza'),
+                  // const Text('Fecha ingreso'),
+                  // const Text('Razon'),
+                  ElevatedButton(
+                    child: const Text(
+                      'Iniciar sesión',
+                      style: TextStyle(fontSize: 16),
+                    ),
+                    onPressed: () async {
+                      print('boton');
+                      //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
+                      // print(user);
+                      // print(password);
+                      final respuesta = await _callBackend('asd', 'asd');
+                        // print(respuesta);
+                      if (respuesta == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text(("Usuario invalido"))),
+                        );
+                      } else {
+                        // print('Usuario valido se guarda');
+                        // loginInfo.saveData(datos: respuesta);
+                      }
+                    }
+                  )
                 ],
               ),
             ),
@@ -57,32 +93,28 @@ class _MascotasState extends State<Mascotas> {
           ],
         ),
       ),
-      // body: Column(
-      //   child:[ Expanded(
-      //     child: SizedBox(
-      //       height: 300,
-      //       child: ListView.builder(
-      //       itemCount: 2,
-      //       itemBuilder: (context, position){
-      //         return _cards(width,height);
-      //       },
-      //     ),
-      //     )
-
-      //   ),]
-      // ),
-      // body: ListView(
-      //   children: const [
-      //     Card(
-      //       color: ColorSelect.txtLogin,
-      //       child: ListTile(
-      //         title: Text('PRIMERA CARD'),
-      //         textColor: Colors.white,
-      //       ),
-      //     )
-      //   ],
-      // ),
     );
+  }
+
+  Future? _callBackend(nombre, password) async {
+    Uri url = Uri.http('192.168.1.65:9998', '/listMascotas');
+    // Uri url = Uri.http('192.168.1.65:9998', 'user/login');
+
+    final response = await http.get(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (response.body == '') {
+      // SI EL BODY VIENE VACIO ES PORQUE EL USUARIO NO EXISTE
+      return null;
+    } else {
+      // SI NO ES PORQUE ENCONTRO EL USUARIO
+      final respuesta = json.decode(response.body);
+      return respuesta;
+    }
   }
 }
 
