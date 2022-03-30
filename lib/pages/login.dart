@@ -128,9 +128,10 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final loginInfo = Provider.of<SesionInfo>(context);
     var size = MediaQuery.of(context).size;
-    // print('Guardado en sesion info');
-    // print(loginInfo.id);
-    // print(loginInfo.token);
+    print('Guardado en sesion info');
+    print(loginInfo.id);
+    print(loginInfo.token);
+    print(loginInfo.rol);
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
@@ -231,6 +232,7 @@ class _LoginState extends State<Login> {
               elevation: 5,
               primary: ColorSelect.loginBackGround),
           onPressed: () async {
+            print('boton');
             //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
             // print(user);
             // print(password);
@@ -263,6 +265,7 @@ class _LoginState extends State<Login> {
 
   Future? _callBackend(nombre, password) async {
     Uri url = Uri.http('192.168.100.8:18080', 'user/login');
+    // Uri url = Uri.http('192.168.100.8:18080', 'user/login');
 
     final response = await http.post(url,
         headers: {
