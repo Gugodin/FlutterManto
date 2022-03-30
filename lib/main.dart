@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinariamanto/pages/login.dart';
+import 'package:veterinariamanto/pages/registro.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
 import 'package:veterinariamanto/pages/medicamentos.dart';
 
@@ -26,10 +27,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/',
+        initialRoute: '/registroDuenios',
         routes: {
           '/': (context) => Login(),
           'Medicamentos': (context) => Medicamentos(),
+          '/registroDuenios': (context) => RegistroDuenios(),
         },
       ),
     );
