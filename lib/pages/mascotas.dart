@@ -1,32 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:veterinariamanto/assets/Colors/color.dart';
 import 'package:http/http.dart' as http;
-
 import 'dart:convert';
 
-// import 'package:flutter/material.dart';
-
-// import 'package:provider/provider.dart';
-
-// import 'package:veterinariamanto/assets/Colors/color.dart';
-// import 'package:http/http.dart' as http;
-
-// import 'package:veterinariamanto/providers/sesion_info.dart';
-// import '../painter/login_painter.dart';
-
-
 class Mascotas extends StatefulWidget {
-  Mascotas({Key? key}) : super(key: key);
+  const Mascotas({Key? key}) : super(key: key);
 
   @override
   State<Mascotas> createState() => _MascotasState();
 }
 
 class _MascotasState extends State<Mascotas> {
+  
+  var refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  List listaDatos = [];
   @override
+  
+  void initState() {
+    super.initState();
+    getDatos().then((lista) {listaDatos = lista;},);
+    refreshList();
+  }
+
   Widget build(BuildContext context) {
 
-    double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -35,7 +33,14 @@ class _MascotasState extends State<Mascotas> {
         title: const Text('Vista de mascotas'),
         backgroundColor: ColorSelect.loginBackGround,
       ),
-      body: Container(
+      // ignore: prefer_is_empty
+      body: listaDatos.length > 0 ? verdadero(height) : const Center(child: CircularProgressIndicator()) 
+    );
+  }
+
+  Widget verdadero(double height) {
+    return RefreshIndicator(
+      child: Container(
         color: Colors.transparent,
         width: double.infinity,
         height: double.infinity,
@@ -59,18 +64,15 @@ class _MascotasState extends State<Mascotas> {
                       style: TextStyle(fontSize: 16),
                     ),
                     onPressed: () async {
-                      print('boton');
-                      //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
-                      // print(user);
-                      // print(password);
-                      final respuesta = await _callBackend('asd', 'asd');
-                        // print(respuesta);
+                      final respuesta = await getDatos();
+                      // ignore: unnecessary_null_comparison
                       if (respuesta == null) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text(("Usuario invalido"))),
                         );
                       } else {
-                        // print('Usuario valido se guarda');
+                        print('Usuario valido se guarda');
+                        print(listaDatos);
                         // loginInfo.saveData(datos: respuesta);
                       }
                     }
@@ -83,42 +85,52 @@ class _MascotasState extends State<Mascotas> {
               width: double.infinity,
               height: height * 0.85,
               padding: const EdgeInsets.symmetric(horizontal: 5),
-              child: ListView.builder(
-                itemCount: 52,
-                itemBuilder: (context, position){
-                  return _cards(width,height);
-                },
-              ),
+              child: listarDatos(listaDatos.length, listaDatos, context),
+              // child: ListView.builder(
+              //   itemCount: listaDatos.length,
+              //   itemBuilder: (context, position){
+              //     return _cards(width,height, listaDatos);
+              //   },
+              // ),
             )
           ],
         ),
-      ),
+      ), 
+      onRefresh: refreshList
     );
   }
 
-  Future? _callBackend(nombre, password) async {
-    Uri url = Uri.http('192.168.1.65:9998', '/listMascotas');
-    // Uri url = Uri.http('192.168.1.65:9998', 'user/login');
-
+  Future<List<dynamic>> getDatos() async {
+  var resultado;
+  try {
     final response = await http.get(
-      url,
+      Uri.http('192.168.1.65:9998', '/listMascotasU'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
-      },
+      }
     );
-
-    if (response.body == '') {
-      // SI EL BODY VIENE VACIO ES PORQUE EL USUARIO NO EXISTE
-      return null;
-    } else {
-      // SI NO ES PORQUE ENCONTRO EL USUARIO
-      final respuesta = json.decode(response.body);
-      return respuesta;
-    }
+    resultado = json.decode(response.body);
+    return resultado;
+  } 
+  catch (e) {
+    return ['Error en la respuesta'];
   }
 }
 
-Widget _cards(double width, double height) {
+  // ignore: prefer_void_to_null
+  Future<Null> refreshList() async {
+    refreshKey.currentState?.show();
+    await Future.delayed(const Duration(seconds: 1));
+    setState(
+      () {
+        getDatos().then((value) => {print(value)});        
+      }
+    );
+    return null;
+  }
+}
+
+Widget _cards(double width, double height, List<dynamic> datos) {
   return Card(
     color: ColorSelect.colorCard,
     elevation: 3,
@@ -126,9 +138,9 @@ Widget _cards(double width, double height) {
     child: Row(
       children: [
         Container(
-          padding: EdgeInsets.only(top:30,left: 30,right: 30),
+          padding: const EdgeInsets.only(top:30,left: 30,right: 30),
           height: height * 0.15,
-          child: const Text('01'),
+          child: const Text('1'),
         ),
         Container(
           padding: EdgeInsets.only(top:30,left: 30,right: 30),
@@ -149,3 +161,84 @@ Widget _cards(double width, double height) {
     ),
   );
 }
+
+
+//https://www.kindacode.com/article/flutter-listtile/
+  Widget listarDatos(int lenghtLista, List lista, BuildContext context) {
+    final List<Map<String, dynamic>> _items = List.generate(
+      lenghtLista,
+      (index) => {
+        "id": index,
+        "nombre": lista[index]['nombre'],
+        "raza": lista[index]['raza'],
+        "fecha": lista[index]['fechaIngreso'],
+        "razon": lista[index]['razon'],
+      },
+    );
+    return ListView.builder(
+      itemCount: _items.length,
+      itemBuilder: (_, index) => Card(
+        margin: const EdgeInsets.all(10),
+        child: ListTile(
+          title: Text(
+            _items[index]['nombre'],
+          ),
+          subtitle: Text(
+            _items[index]['raza'],
+          ),
+          // trailing: Row(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     // IconButton(
+          //     //   onPressed: () {
+          //     //     listaDatos.add(lista[index]['id'].toString());
+          //     //     listaDatos.add(lista[index]['username']);
+          //     //     listaDatos.add(lista[index]['password']);
+          //     //     listaDatos.add(lista[index]['edad'].toString());
+          //     //     listaDatos.add(lista[index]['nombre']);
+          //     //     listaDatos.add(lista[index]['apellidos']);
+
+          //     //     // print(listaDatos);
+          //     //     late List ListaNavigador = [];
+          //     //     ListaNavigador.add(lista[index]['id'].toString());
+          //     //     ListaNavigador.add(lista[index]['rol']);
+          //     //     local().setDuenio(listaDatos);
+          //     //     Navigator.pushReplacementNamed(context, 'edit_duenios',
+          //     //         arguments: ListaNavigador);
+          //     //   },
+          //     //   icon: const Icon(Icons.edit),
+          //     // ),
+          //     IconButton(
+          //       onPressed: () {
+          //         // String id_STR = lista_navigator.toString()[1];
+          //         // int id_casteado = int.parse(lista_navigator.toString()[1]);
+
+          //         // ignore: unnecessary_new
+          //         Usuario user = new Usuario(
+          //             id: lista[index]['id'],
+          //             nombre: lista[index]['nombre'],
+          //             apellidos: lista[index]['apellidos'],
+          //             edad: lista[index]['edad'],
+          //             rol: 'Cliente',
+          //             username: lista[index]['username'],
+          //             password: lista[index]['password']);
+
+          //         local().getToken().then(
+          //           (token) {
+          //             deleteDuenio(user, token!).then(
+          //               (value) {
+          //                 print(value);
+          //                 Navigator.pushReplacementNamed(context, 'duenios');
+          //               },
+          //             );
+          //           },
+          //         );
+          //       },
+          //       icon: const Icon(Icons.delete),
+          //     ),
+          //   ],
+          // ),
+        ),
+      ),
+    );
+  }
