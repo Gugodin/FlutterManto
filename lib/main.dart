@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:veterinariamanto/pages/editarDuenio.dart';
 import 'package:veterinariamanto/pages/login.dart';
 import 'package:veterinariamanto/pages/registro.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
@@ -27,11 +28,12 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/registroDuenios',
+        initialRoute: '/',
         routes: {
           '/': (context) => Login(),
           'Medicamentos': (context) => Medicamentos(),
-          '/registroDuenios': (context) => RegistroDuenios(),
+          'duenios': (_) => const duenios(),
+          'edit_duenios': (_) => const edit_duenio(),
         },
       ),
     );

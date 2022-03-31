@@ -1,11 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinariamanto/assets/Colors/color.dart';
 import 'package:http/http.dart' as http;
+import 'package:veterinariamanto/providers/prueba.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
+import '../painter/duenio.dart';
 import '../painter/login_painter.dart';
+import '../providers/share.dart';
 //hola
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -251,6 +255,9 @@ class _LoginState extends State<Login> {
               } else {
                 // print('Usuario valido se guarda');
                 loginInfo.saveData(datos: respuesta);
+                local().setToken(respuesta[1]);
+                
+                Navigator.pushNamed(context, 'duenios');
               }
             }
           },
@@ -262,7 +269,7 @@ class _LoginState extends State<Login> {
   }
 
   Future? _callBackend(nombre, password) async {
-    Uri url = Uri.http('192.168.100.8:18080', 'user/login');
+    Uri url = Uri.http('192.168.1.70:18080', 'user/login');
 
     final response = await http.post(url,
         headers: {
@@ -279,5 +286,107 @@ class _LoginState extends State<Login> {
       final respuesta = json.decode(response.body);
       return respuesta;
     }
+  }
+
+
+
+}
+
+
+
+
+
+
+
+
+  Future<List<dynamic>> updateDuenio(Usuario usuario, String token) async {
+  try {
+    final response = await http.post(
+      Uri.http('192.168.1.70:18080', '/user/update'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: token
+      },
+      body: json.encode({
+        "idUsuario": usuario.idUsuario,
+        "nombre": usuario.nombre,
+        "password": usuario.password,
+        "rol": usuario.rol,
+        "primerNombre": usuario.primerNombre,
+        "apellido": usuario.apellido
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      if (data == null) {
+        return [];
+      } else {
+        return data;
+      }
+    } else {
+      return ['No se ha podido conectar al servidor'];
+    }
+  } catch (e) {
+    return ['Error en la respuesta'];
+  }
+}
+Future<List<dynamic>> get_duenios_all(String token) async {
+  var resultado;
+  print('-----------------');
+  print(LoginProvider().jwt);
+  print('object');
+  try {
+    final response = await http
+        .get(Uri.http('192.168.1.70:18080', '/user/listUser'), headers: {
+      'Content-Type': 'application/json; charset=UTF-8',
+      HttpHeaders.authorizationHeader: token
+    });
+
+    // body: json.encode({"username": usuario, "password": password}));
+    resultado = json.decode(response.body);
+    // print(resultado);
+    return resultado;
+  } catch (e) {
+    return ['Error en la respuesta'];
+  }
+}
+
+
+
+Future<List<dynamic>> deleteDuenio(Usuario usuario, String token) async {
+  try {
+    final response = await http.post(
+      Uri.http('192.168.1.70:18080', '/user/delete'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        HttpHeaders.authorizationHeader: token
+      },
+      body: json.encode(
+        {
+          "idUsuario": usuario.idUsuario,
+          "nombre": usuario.nombre,
+          "password": usuario.password,
+          "rol": usuario.rol,
+          "primerNombre": usuario.primerNombre,
+          "apellido": usuario.apellido
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      print(data);
+      if (data == null) {
+        return [];
+      } else {
+        return data;
+      }
+    } else {
+      return ['No se ha podido conectar al servidor'];
+    }
+  } catch (e) {
+    return ['Error en la respuesta'];
   }
 }
