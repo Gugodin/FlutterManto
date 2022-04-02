@@ -1,6 +1,9 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinariamanto/pages/login.dart';
+import 'package:veterinariamanto/pages/medicamentos_modAdd.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
 import 'package:veterinariamanto/pages/medicamentos.dart';
 
@@ -26,10 +29,11 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: '/',
+        initialRoute: 'Medicamentos',
         routes: {
           '/': (context) => Login(),
           'Medicamentos': (context) => Medicamentos(),
+          'MedicamentosModAdd': (context) => MedicamentosModAdd(),
         },
       ),
     );
