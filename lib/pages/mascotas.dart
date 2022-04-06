@@ -13,20 +13,19 @@ class Mascotas extends StatefulWidget {
 class _MascotasState extends State<Mascotas> {
   
   var refreshKey = GlobalKey<RefreshIndicatorState>();
-
+  late List<String> listData = [];
   List listaDatos = [];
+
   @override
-  
   void initState() {
     super.initState();
     print('ANTES DEL GET DATOS');
     getDatos().then((lista) {listaDatos = lista;},);
     print(listaDatos);
     refreshList();
-
-    
   }
 
+  @override
   Widget build(BuildContext context) {
 
     double width = MediaQuery.of(context).size.height;
@@ -39,25 +38,17 @@ class _MascotasState extends State<Mascotas> {
         backgroundColor: ColorSelect.loginBackGround,
       ),
       // ignore: prefer_is_empty
-      body: listaDatos.length > 0 ? verdadero(height, width) : const Center(child: CircularProgressIndicator()) 
-    );
-  }
-
-  Widget verdadero(double height, double width) {
-    return RefreshIndicator(
-      child: Container(
-        color: Colors.transparent,
-        width: double.infinity,
-        height: double.infinity,
-        child: Container(
-          color: Colors.transparent,
-          width: double.infinity,
-          height: height * 0.85,
-          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: listarDatos(listaDatos.length, listaDatos, context, width, height),
-        ),
-      ), 
-      onRefresh: refreshList
+      body: listaDatos.length > 0 
+        ? RefreshIndicator(
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            padding: const EdgeInsets.all(5),
+            child: listarDatos(listaDatos.length, listaDatos, context, width, height)
+          ),
+          onRefresh: refreshList
+        ) 
+        : const Center(child: CircularProgressIndicator()) 
     );
   }
 
@@ -66,7 +57,7 @@ class _MascotasState extends State<Mascotas> {
   print('Antes del try');
   try {
     final response = await http.get(
-      Uri.http('172.17.151.122:9998', '/listMascotasU'),
+      Uri.http('192.168.1.74:9998', '/listMascotasU'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       }
@@ -80,7 +71,6 @@ class _MascotasState extends State<Mascotas> {
   }
 }
 
-  // ignore: prefer_void_to_null
   Future<Null> refreshList() async {
     refreshKey.currentState?.show();
     await Future.delayed(const Duration(seconds: 1));
@@ -91,65 +81,89 @@ class _MascotasState extends State<Mascotas> {
     );
     return null;
   }
-}
 
-//https://www.kindacode.com/article/flutter-listtile/
-Widget listarDatos(int lenghtLista, List lista, BuildContext context, double width, double height) {
-  final List<Map<String, dynamic>> _items = List.generate(
-    lenghtLista,
-    (index) => {
-      "id": index,
-      "nombre": lista[index]['nombre'],
-      "raza": lista[index]['raza'],
-      "fecha": lista[index]['fechaIngreso'],
-      "razon": lista[index]['razon'],
-    },
-  );
-  return ListView.builder(
-    itemCount: _items.length,
-    itemBuilder: (_, index) => Card(
-      color: ColorSelect.colorCard,
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Row(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            color: null,
-            child: Text(_items[index]['nombre']),
+  //https://www.kindacode.com/article/flutter-listtile/
+  Widget listarDatos(int lenghtLista, List lista, BuildContext context, double width, double height) {
+    final List<Map<String, dynamic>> _items = List.generate(
+      lenghtLista,
+      (index) => {
+        "id": index,
+        "nombre": lista[index]['nombre'],
+        "fecha" : "Fecha: " + lista[index]['fechaIngreso'],
+        "raza" : "Raza: " + lista[index]['raza'],
+        "descripcion": "Descripción: " + lista[index]['razon'],
+      },
+    );
+    return ListView.builder(
+      itemCount: _items.length,
+      itemBuilder: (_, index) => Card(
+        color: ColorSelect.colorCard,
+        elevation: 3,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: ListTile(
+          title: Text(
+            _items[index]['nombre']
           ),
-          Container(
-            color: null,
-            child: Text(_items[index]['raza']),
+          subtitle: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                _items[index]['fecha'],
+              ),
+              Text(
+                _items[index]['raza'],
+              ),
+              Text(
+                _items[index]['descripcion'],
+              ),
+            ],
           ),
-          Container(
-            color: null,
-            child: Text(_items[index]['fecha']),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  // listData.add(lista[index]['idUsuario'].toString());
+                  // listData.add(lista[index]['nombre']);
+                  // listData.add(lista[index]['raza']);
+                  // listData.add(lista[index]['fechaIngreso']);
+                  // listData.add(lista[index]['razon']);
+                  // // print(lista_datos);
+                  // late List ListaNavigador = [];
+                  // ListaNavigador.add(lista[index]['idUsuario'].toString());
+                  // ListaNavigador.add(lista[index]['rol']);
+                  // local().setDuenio(listData);
+                  // Navigator.pushReplacementNamed(context, 'edit_duenios', arguments: ListaNavigador);
+                },
+                icon: const Icon(Icons.edit, color: Colors.green,)
+              ),
+              IconButton(
+                onPressed: (){
+                  // Mascota mascota = new Mascota(
+                  //   idMascota: lista[index]['idUsuario'],
+                  //   nombre: lista[index]['nombre'],
+                  //   raza: lista[index]['raza'],
+                  //   fechaIngreso: lista[index]['fechaIngreso'],
+                  //   razon: lista[index]['razon'],
+                  // );
+                  // local().getToken().then(
+                  //   (token) {
+                  //     deleteDuenio(user, token!).then(
+                  //       (value) {
+                  //         print(value);
+                  //         Navigator.pushReplacementNamed(context, 'duenios');
+                  //       },
+                  //     );
+                  //   },
+                  // );
+                },
+                icon: const Icon(Icons.delete, color: Colors.red,),
+              )
+            ]
           ),
-          Container(
-            color: null,
-            child: Text(_items[index]['razon']),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.edit,
-              color: Colors.green,
-              size: 26.0,
-            ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.delete,
-              color: Colors.red,
-              size: 26.0,
-            ),
-          ),
-        ],
+        )
       ),
-
-    ),
-  );
+    );
+  }
 }
