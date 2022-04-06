@@ -134,7 +134,7 @@ class _MascotasState extends State<Mascotas> {
                   // ListaNavigador.add(lista[index]['idUsuario'].toString());
                   // ListaNavigador.add(lista[index]['rol']);
                   // local().setDuenio(listData);
-                  // Navigator.pushReplacementNamed(context, 'edit_duenios', arguments: ListaNavigador);
+                  Navigator.pushReplacementNamed(context, 'EditPet');
                 },
                 icon: const Icon(Icons.edit, color: Colors.green,)
               ),

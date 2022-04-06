@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:veterinariamanto/pages/editarMascota.dart';
 import 'package:veterinariamanto/pages/login.dart';
 import 'package:veterinariamanto/pages/mascotas.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
@@ -30,8 +31,9 @@ class MyApp extends StatelessWidget {
         initialRoute: 'Mascotas',
         routes: {
           '/': (context) => Login(),
-          'Medicamentos': (context) => Medicamentos(),
-          'Mascotas': (context) => Mascotas(),
+          'Medicamentos'  : (context) => Medicamentos(),
+          'Mascotas'      : (context) => const Mascotas(),
+          'EditPet'       : (context) => const EditPet(),
         },
       ),
     );
