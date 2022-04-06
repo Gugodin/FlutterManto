@@ -19,8 +19,12 @@ class _MascotasState extends State<Mascotas> {
   
   void initState() {
     super.initState();
+    print('ANTES DEL GET DATOS');
     getDatos().then((lista) {listaDatos = lista;},);
+    print(listaDatos);
     refreshList();
+
+    
   }
 
   Widget build(BuildContext context) {
@@ -59,14 +63,16 @@ class _MascotasState extends State<Mascotas> {
 
   Future<List<dynamic>> getDatos() async {
   var resultado;
+  print('Antes del try');
   try {
     final response = await http.get(
-      Uri.http('192.168.1.65:9998', '/listMascotasU'),
+      Uri.http('172.17.151.122:9998', '/listMascotasU'),
       headers: {
         'Content-Type': 'application/json; charset=UTF-8',
       }
     );
     resultado = json.decode(response.body);
+    print(resultado);
     return resultado;
   } 
   catch (e) {
@@ -143,6 +149,7 @@ Widget listarDatos(int lenghtLista, List lista, BuildContext context, double wid
           ),
         ],
       ),
+
     ),
   );
 }
