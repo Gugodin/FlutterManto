@@ -4,7 +4,8 @@ import 'package:veterinariamanto/providers/modelo_citas.dart';
 import 'package:veterinariamanto/providers/share.dart';
 import 'package:veterinariamanto/pages/citas.dart';
 //import 'package:veterinariamanto/views/duenios.dart';
-//import 'package:veterinariamanto/services/loginService.dart';
+import 'package:veterinariamanto/pages/login.dart';
+import 'package:veterinariamanto/services/loginService.dart';
 
 class edit_citas extends StatefulWidget {
   // final Usuario user;
@@ -113,7 +114,8 @@ class _edit_citasState extends State<edit_citas> {
                           (value) {
                             print(value);
                             Navigator.pushReplacementNamed(
-                                context, 'citas');
+                              context, 'citas'
+                            );
                           },
                         );
                       },

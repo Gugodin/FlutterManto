@@ -1,11 +1,14 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:veterinariamanto/assets/Colors/color.dart';
 import 'package:http/http.dart' as http;
 import 'package:veterinariamanto/providers/sesion_info.dart';
 import '../painter/login_painter.dart';
+import 'package:veterinariamanto/providers/share.dart';
+
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -242,17 +245,23 @@ class _LoginState extends State<Login> {
                 const SnackBar(content: Text(("Llenar todos los campos"))),
               );
             } else {
+              print(user);
+              print(password);
               final respuesta = await _callBackend(user, password);
 
-              // print(respuesta);
+              print(respuesta);
 
               if (respuesta == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text(("Usuario invalido"))),
                 );
               } else {
-                // print('Usuario valido se guarda');
+                print(respuesta[0]);
                 loginInfo.saveData(datos: respuesta);
+                Navigator.pushNamed(context, 'citas');
+
+                print("etrooo");
+
               }
             }
           },
@@ -264,7 +273,7 @@ class _LoginState extends State<Login> {
   }
 
   Future? _callBackend(nombre, password) async {
-    Uri url = Uri.http('192.168.100.8:18080', 'user/login');
+    Uri url = Uri.http('192.168.1.70:18080', 'user/login');
     // Uri url = Uri.http('192.168.100.8:18080', 'user/login');
 
     final response = await http.post(url,
@@ -284,3 +293,5 @@ class _LoginState extends State<Login> {
     }
   }
 }
+
+

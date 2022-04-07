@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 //import 'package:fluttermanto/providers/duenios_modelo.dart';
 import 'package:veterinariamanto/providers/modelo_citas.dart';
 import 'package:veterinariamanto/providers/share.dart';
-//import 'package:fluttermanto/services/loginService.dart';
+import 'package:veterinariamanto/services/loginService.dart';
 
 class citas extends StatefulWidget {
   const citas({ Key? key }) : super(key: key);
@@ -21,14 +21,12 @@ class _citasState extends State<citas> {
   void initState() {
     super.initState();
     local().getToken().then((token) => {
-          get_citas_all(token!).then((lista) {
-            // listaDatos(value.length, value);
-            tamLista = lista.length;
-            lista_datos = lista;
-          }),
-        });
-
-    
+      get_citas_all(token!).then((lista) {
+        // listaDatos(value.length, value);
+        tamLista = lista.length;
+        lista_datos = lista;
+      }),
+    });
     refreshList();
   }
 
@@ -36,7 +34,7 @@ class _citasState extends State<citas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         title: const Text('Citas'),
       ),
       body: 

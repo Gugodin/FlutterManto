@@ -30,4 +30,9 @@ class local {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getStringList('listaCitas');
   }
+
+  Future<List<String>?> get_citas_all() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('getListcita');
+  }
 }
