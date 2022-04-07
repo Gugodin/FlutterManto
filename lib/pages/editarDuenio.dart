@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:veterinariamanto/painter/duenio.dart';
 
 import '../providers/share.dart';
+import '../services/servicesLogin.dart';
 import 'login.dart';
 
 class edit_duenio extends StatefulWidget {
@@ -46,7 +47,7 @@ class _edit_duenioState extends State<edit_duenio> {
 
     super.initState();
 
-    local().getDuenio().then((lista) {
+    Local().getDuenio().then((lista) {
       print(lista);
       datos_duenio = lista!;
     });
@@ -113,7 +114,7 @@ class _edit_duenioState extends State<edit_duenio> {
                         
                             );
                         print(user);
-                        local().getToken().then(
+                        Local().getToken().then(
                           (token) {
                             updateDuenio(user, token!).then(
                               (value) {
@@ -164,7 +165,7 @@ class _edit_duenioState extends State<edit_duenio> {
     await Future.delayed(const Duration(milliseconds: 30));
     setState(
       () {
-        local().getDuenio().then((lista) {
+        Local().getDuenio().then((lista) {
           print(lista);
           nombre = new TextEditingController(text: lista![4]);
           apellido = new TextEditingController(text: lista[5]);

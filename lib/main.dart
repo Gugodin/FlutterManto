@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:veterinariamanto/pages/editPet.dart';
 import 'package:veterinariamanto/pages/editarDuenio.dart';
 import 'package:veterinariamanto/pages/login.dart';
+import 'package:veterinariamanto/pages/mascotas.dart';
 import 'package:veterinariamanto/pages/registro.dart';
 import 'package:veterinariamanto/providers/sesion_info.dart';
 import 'package:veterinariamanto/pages/medicamentos.dart';
@@ -34,6 +36,8 @@ class MyApp extends StatelessWidget {
           'Medicamentos': (context) => Medicamentos(),
           'duenios': (_) => const duenios(),
           'edit_duenios': (_) => const edit_duenio(),
+          'Mascotas': (_) => const Mascotas(),
+          'EditPet': (_) => const EditPet(),
         },
       ),
     );

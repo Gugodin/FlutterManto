@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:veterinariamanto/painter/duenio.dart';
 
 import '../providers/share.dart';
+import '../services/servicesLogin.dart';
 import 'login.dart';
 
 
@@ -21,7 +22,7 @@ class _dueniosState extends State<duenios> {
   List lista_datos = [];
   void initState() {
     super.initState();
-    local().getToken().then((token) => {
+    Local().getToken().then((token) => {
           print('token: $token'),
           get_duenios_all(token!).then((lista) {
             
@@ -54,20 +55,14 @@ class _dueniosState extends State<duenios> {
   Future<Null> refreshList() async {
     refreshKey.currentState?.show();
     await Future.delayed(const Duration(seconds: 1));
-    setState(
-      () {
-        local().getToken().then(
-              (token) => {
-                get_duenios_all(token!).then(
-                  (lista) {
-                    tamLista = lista.length;
-                    lista_datos = lista;
-                  },
-                ),
-              },
-            );
-      },
-    );
+    setState(() {
+      Local().getToken().then((token) => {
+        get_duenios_all(token!).then((lista) {
+            tamLista = lista.length;
+            lista_datos = lista;
+        }),
+      });
+    });
     return null;
   }
 
@@ -110,7 +105,7 @@ class _dueniosState extends State<duenios> {
                   late List ListaNavigador = [];
                   ListaNavigador.add(lista[index]['idUsuario'].toString());
                   ListaNavigador.add(lista[index]['rol']);
-                  local().setDuenio(lista_Datos);
+                  Local().setDuenio(lista_Datos);
                   Navigator.pushReplacementNamed(context, 'edit_duenios',
                       arguments: ListaNavigador);
                 },
@@ -130,7 +125,7 @@ class _dueniosState extends State<duenios> {
                       primerNombre: lista[index]['primerNombre'],
                       apellido: lista[index]['apellido']);
 
-                  local().getToken().then(
+                  Local().getToken().then(
                     (token) {
                       deleteDuenio(user, token!).then(
                         (value) {

@@ -18,116 +18,13 @@ class Login extends StatefulWidget {
   State<Login> createState() => _LoginState();
 }
 
+String ip = '192.168.1.74:18080';
+
 class _LoginState extends State<Login> {
   String user = '';
   String password = '';
   bool _isObscure = false;
-
-  get _textFieldUser => Container(
-      margin: const EdgeInsets.only(top: 20, bottom: 10),
-      // color: Colors.black,
-
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Text(
-                'Correo electrónico',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: ColorSelect.txtLogin,
-                  fontSize: 15,
-                  // fontFamily: ''
-                ),
-              ),
-            ],
-          ),
-          //TEXT FIELD CORREO
-          TextField(
-            onChanged: (value) {
-              user = value;
-            },
-            decoration: const InputDecoration(
-              // labelText: 'Correo electrónico',
-              hintText: 'Email address',
-              border: OutlineInputBorder(
-                  // borderSide: BorderSide(width: 10),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-            ),
-          ),
-        ],
-      ));
-
-  get _textFieldPassword => Container(
-      margin: const EdgeInsets.only(top: 10, bottom: 10),
-      // color: Colors.black,
-
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Text(
-                'Contraseña',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: ColorSelect.txtLogin,
-                  fontSize: 15,
-                  // fontFamily: ''
-                ),
-              ),
-            ],
-          ),
-          //TEXT FIELD PASSWORD
-          TextField(
-            onChanged: (value) {
-              password = value;
-            },
-            obscureText: !_isObscure,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      // print('a');
-                      // print(_isObscure);
-                      _isObscure = !_isObscure;
-                      // print(_isObscure);
-                    });
-                    // print('a');
-                  },
-                  icon: Icon(
-                      _isObscure ? Icons.visibility : Icons.visibility_off)),
-              // labelText: 'Correo electrónico',
-              hintText: 'Password',
-
-              border: const OutlineInputBorder(
-                  // borderSide: BorderSide(width: 10),
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-            ),
-          ),
-        ],
-      ));
-
-  get _registerButton => Padding(
-        padding: const EdgeInsets.only(bottom: 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            const Text(
-              '¿No te has registrado?',
-              style: TextStyle(fontSize: 15),
-            ),
-            TextButton(
-                onPressed: () {},
-                child: const Text(
-                  'Registrate',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                ))
-          ],
-        ),
-      );
-
+  
   @override
   Widget build(BuildContext context) {
     final loginInfo = Provider.of<SesionInfo>(context);
@@ -138,8 +35,6 @@ class _LoginState extends State<Login> {
     return SafeArea(
       child: Scaffold(
         body: SizedBox(
-          // color: Colors.red,
-
           height: double.infinity,
           width: double.infinity,
           child: Stack(
@@ -150,22 +45,20 @@ class _LoginState extends State<Login> {
                 height: double.infinity,
                 child: CustomPaint(
                   painter: LoginPainter(
-                      heiDeterminate: size.height, wiDeterminate: size.width),
+                    heiDeterminate: size.height,
+                    wiDeterminate: size.width
+                  ),
                 ),
               ),
-
               //LO DEMAS
               SingleChildScrollView(
                 child: Container(
                   //MOSTRAR A TUS COMPAS PA VER COMO LES GUSTA
                   decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(Radius.circular(30)),
-                    // color: Colors.black.withOpacity(0.4)
                   ),
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                   child: Column(
                     children: [
                       //IMAGE
@@ -178,9 +71,10 @@ class _LoginState extends State<Login> {
                         decoration: const BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                                color: Colors.black,
-                                blurRadius: 4,
-                                spreadRadius: 1)
+                              color: Colors.black,
+                              blurRadius: 4,
+                              spreadRadius: 1
+                            )
                           ],
                           color: Colors.white,
                           borderRadius: BorderRadius.all(Radius.circular(20)),
@@ -194,19 +88,18 @@ class _LoginState extends State<Login> {
                                 'Inicia sesion ',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                    color: ColorSelect.txtLogin,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 25),
+                                  color: ColorSelect.txtLogin,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 25
+                                ),
                               ),
                             ),
                             //TEXT USER
                             _textFieldUser,
                             //TEXT PASSWORD
                             _textFieldPassword,
-
                             //REGISTRO BOTON
                             _registerButton,
-
                             //BOTON
                             _button(loginInfo),
                           ],
@@ -226,58 +119,166 @@ class _LoginState extends State<Login> {
     );
   }
 
+  get _textFieldUser => Container(
+    margin: const EdgeInsets.only(top: 20, bottom: 10),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Text(
+              'Correo electrónico',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: ColorSelect.txtLogin,
+                fontSize: 15,
+                // fontFamily: ''
+              ),
+            ),
+          ],
+        ),
+        //TEXT FIELD CORREO
+        TextField(
+          onChanged: (value) {
+            user = value;
+          },
+          decoration: const InputDecoration(
+            // labelText: 'Correo electrónico',
+            hintText: 'Email address',
+            border: OutlineInputBorder(
+              // borderSide: BorderSide(width: 10),
+              borderRadius: BorderRadius.all(Radius.circular(20))
+            ),
+          ),
+        ),
+      ],
+    )
+  );
+
+  get _textFieldPassword => Container(
+    margin: const EdgeInsets.only(top: 10, bottom: 10),
+    child: Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: const [
+            Text(
+              'Contraseña',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: ColorSelect.txtLogin,
+                fontSize: 15,
+                // fontFamily: ''
+              ),
+            ),
+          ],
+        ),
+        //TEXT FIELD PASSWORD
+        TextField(
+          onChanged: (value) {
+            password = value;
+          },
+          obscureText: !_isObscure,
+          decoration: InputDecoration(
+            suffixIcon: IconButton(
+              onPressed: () {
+                setState(() {
+                  _isObscure = !_isObscure;
+                });
+              },
+              icon: Icon(
+                _isObscure ? Icons.visibility : Icons.visibility_off
+              )
+            ),
+            // labelText: 'Correo electrónico',
+            hintText: 'Password',
+            border: const OutlineInputBorder(
+              // borderSide: BorderSide(width: 10),
+              borderRadius: BorderRadius.all(Radius.circular(20))
+            ),
+          ),
+        ),
+      ],
+    )
+  );
+
+  get _registerButton => Padding(
+    padding: const EdgeInsets.only(bottom: 5),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        const Text(
+          '¿No te has registrado?',
+          style: TextStyle(fontSize: 15),
+        ),
+        TextButton(
+          onPressed: () {},
+          child: const Text(
+            'Registrate',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          )
+        )
+      ],
+    ),
+  );
+
   dynamic _button(SesionInfo loginInfo) {
-    return (Container(
+    return Container(
       padding: const EdgeInsets.only(bottom: 10),
       child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              minimumSize: const Size(140, 40),
-              elevation: 5,
-              primary: ColorSelect.loginBackGround),
-          onPressed: () async {
-            //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
-            // print(user);
-            // print(password);
-
-            if (user == "" || password == "") {
+        child: const Text(
+          'Iniciar sesión',
+          style: TextStyle(fontSize: 16),
+        ),
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(140, 40),
+          elevation: 5,
+          primary: ColorSelect.loginBackGround,
+        ),
+        onPressed: () async {
+          //AQUI ES DONDE SE HACE LA LLAMADA CON EL BACK
+          if (user == "" || password == "") {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text(
+                  ("Llenar todos los campos")
+                )
+              ),
+            );
+          } else {
+            final respuesta = await _callBackend(user, password);
+            if (respuesta == null) {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text(("Llenar todos los campos"))),
+                const SnackBar(
+                  content: Text(
+                    "Usuario invalido"
+                  )
+                ),
               );
             } else {
-              final respuesta = await _callBackend(user, password);
-
+              // String valor = respuesta[0].toString();
+              loginInfo.saveData(datos: respuesta);
+              Local().setToken(respuesta[1]);
+              Local().setIdDuenio(respuesta[0]);
               // print(respuesta);
-
-              if (respuesta == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text(("Usuario invalido"))),
-                );
-              } else {
-                // print('Usuario valido se guarda');
-                loginInfo.saveData(datos: respuesta);
-                local().setToken(respuesta[1]);
-                
-                Navigator.pushNamed(context, 'duenios');
-              }
+              Navigator.pushNamed(context, 'Mascotas');
             }
-          },
-          child: const Text(
-            'Iniciar sesión',
-            style: TextStyle(fontSize: 16),
-          )),
-    ));
+          }
+        },
+      ),
+    );
   }
 
   Future? _callBackend(nombre, password) async {
-    Uri url = Uri.http('192.168.1.70:18080', 'user/login');
-
-    final response = await http.post(url,
-        headers: {
-          'Content-Type': 'application/json; charset=UTF-8',
-        },
-        // FORMA FACIL DE REALIZAR UN JSON DE UN MAPA
-        body: json.encode({'nombre': nombre, 'password': password}));
-
+    Uri url = Uri.http(ip, 'user/login');
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      // FORMA FACIL DE REALIZAR UN JSON DE UN MAPA
+      body: json.encode({'nombre': nombre, 'password': password})
+    );
     if (response.body == '') {
       // SI EL BODY VIENE VACIO ES PORQUE EL USUARIO NO EXISTE
       return null;
@@ -286,107 +287,5 @@ class _LoginState extends State<Login> {
       final respuesta = json.decode(response.body);
       return respuesta;
     }
-  }
-
-
-
-}
-
-
-
-
-
-
-
-
-  Future<List<dynamic>> updateDuenio(Usuario usuario, String token) async {
-  try {
-    final response = await http.post(
-      Uri.http('192.168.1.70:18080', '/user/update'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: token
-      },
-      body: json.encode({
-        "idUsuario": usuario.idUsuario,
-        "nombre": usuario.nombre,
-        "password": usuario.password,
-        "rol": usuario.rol,
-        "primerNombre": usuario.primerNombre,
-        "apellido": usuario.apellido
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(data);
-      if (data == null) {
-        return [];
-      } else {
-        return data;
-      }
-    } else {
-      return ['No se ha podido conectar al servidor'];
-    }
-  } catch (e) {
-    return ['Error en la respuesta'];
-  }
-}
-Future<List<dynamic>> get_duenios_all(String token) async {
-  var resultado;
-  print('-----------------');
-  print(LoginProvider().jwt);
-  print('object');
-  try {
-    final response = await http
-        .get(Uri.http('192.168.1.70:18080', '/user/listUser'), headers: {
-      'Content-Type': 'application/json; charset=UTF-8',
-      HttpHeaders.authorizationHeader: token
-    });
-
-    // body: json.encode({"username": usuario, "password": password}));
-    resultado = json.decode(response.body);
-    // print(resultado);
-    return resultado;
-  } catch (e) {
-    return ['Error en la respuesta'];
-  }
-}
-
-
-
-Future<List<dynamic>> deleteDuenio(Usuario usuario, String token) async {
-  try {
-    final response = await http.post(
-      Uri.http('192.168.1.70:18080', '/user/delete'),
-      headers: {
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: token
-      },
-      body: json.encode(
-        {
-          "idUsuario": usuario.idUsuario,
-          "nombre": usuario.nombre,
-          "password": usuario.password,
-          "rol": usuario.rol,
-          "primerNombre": usuario.primerNombre,
-          "apellido": usuario.apellido
-        },
-      ),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      print(data);
-      if (data == null) {
-        return [];
-      } else {
-        return data;
-      }
-    } else {
-      return ['No se ha podido conectar al servidor'];
-    }
-  } catch (e) {
-    return ['Error en la respuesta'];
   }
 }
