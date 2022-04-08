@@ -21,7 +21,17 @@ class local {
     return prefs.getStringList('listaDuenio');
   }
 
-    Future<Future<bool>> setCitas(List<String> lista) async {
+  Future<Future<bool>> setMascota(List<String> lista) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setStringList('listaMascota', lista);
+  }
+
+  Future<List<String>?> getMascota() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getStringList('listaMascota');
+  }
+
+  Future<Future<bool>> setCitas(List<String> lista) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setStringList('listaCitas', lista);
   }
@@ -31,8 +41,13 @@ class local {
     return prefs.getStringList('listaCitas');
   }
 
-  Future<List<String>?> get_citas_all() async {
+  Future<Future<bool>> setIdDuenio(int id) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('getListcita');
+    return prefs.setInt('idDuenio', id);
+  }
+
+  Future getIdDuenio() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('idDuenio');
   }
 }

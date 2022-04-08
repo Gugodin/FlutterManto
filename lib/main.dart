@@ -34,7 +34,8 @@ class MyApp extends StatelessWidget {
         routes: {
           '/': (context) => Login(),
           'Medicamentos': (context) => Medicamentos(),
-          'citas': (_) => const citas(),
+          'citas': (context) => const citas(),
+          'edit_citas': (context) => const edit_citas(),
         },
       ),
     );

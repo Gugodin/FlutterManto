@@ -45,13 +45,14 @@ class _citasState extends State<citas> {
             )
           : const Center(
               child: CircularProgressIndicator(),
+              // child: const Center(child: Text('No hay datos',style: TextStyle(fontSize: 30),),) 
             ),
     );
   }
 
   Future<Null> refreshList() async {
     refreshKey.currentState?.show();
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 3));
     setState(
       () {
         local().getToken().then(

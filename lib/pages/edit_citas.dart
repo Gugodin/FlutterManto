@@ -63,7 +63,7 @@ class _edit_citasState extends State<edit_citas> {
     print(datos_citas);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         title: const Text('Modificar Cita'),
         leading: BackButton(
           color: Colors.black,
@@ -75,9 +75,11 @@ class _edit_citasState extends State<edit_citas> {
       body: iniciar == true
         ? RefreshIndicator(
           child: ListView(
+            
             padding: EdgeInsets.only(top: 10, left: 20, right: 20),
             children: [
-              input(width_total, height_total, 'tipoServicio', tipoServicio),
+              
+              input(width_total, height_total, 'Servicio', tipoServicio),
               input(width_total, height_total, 'hora', hora),
               input(width_total, height_total, 'fecha', fecha),
               //input(width_total, height_total, 'citass', citas_controller),
@@ -107,15 +109,13 @@ class _edit_citasState extends State<edit_citas> {
                       tipoServicio: tipoServicio.text,
                       //citass: citas_controller.text,
                     );
-                    print(citas);
+                    print("citas: $citas");
                     local().getToken().then(
                       (token) {
                         updateCitas(citas, token!).then(
                           (value) {
                             print(value);
-                            Navigator.pushReplacementNamed(
-                              context, 'citas'
-                            );
+                            Navigator.pushReplacementNamed(context, 'citas');
                           },
                         );
                       },
@@ -161,13 +161,13 @@ class _edit_citasState extends State<edit_citas> {
     await Future.delayed(const Duration(milliseconds: 30));
     setState(
       () {
-        local().getDuenio().then((lista) {
-          print(lista);
-          fecha = new TextEditingController(text: lista![1]);
-          hora = new TextEditingController(text: lista[2]);
-          tipoServicio= new TextEditingController(text: lista[3]);
+      
+          
+          fecha = new TextEditingController(text: datos_citas[1]);
+          hora = new TextEditingController(text: datos_citas[2]);
+          tipoServicio= new TextEditingController(text: datos_citas[3]);
           //citas_controller = new TextEditingController(text: lista[1]);
-        });
+
       },
     );
     return null;
